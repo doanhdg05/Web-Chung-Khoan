@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Khuyến Nghị Đầu Tư</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #0056b3; color: white; }
+        tr:hover { background-color: #f5f5f5; }
+    </style>
+</head>
+<body>
+
+    <h2>Review Kết Quả Kinh Doanh & Khuyến Nghị</h2>
+    
+    <table id="stockTable"></table>
+
+    <script>
+        // Lấy dữ liệu từ file data.csv
+        fetch('data.csv')
+            .then(response => response.text())
+            .then(data => {
+                const rows = data.split('\n');
+                const table = document.getElementById('stockTable');
+                
+                rows.forEach((row, index) => {
+                    // Bỏ qua các dòng trống
+                    if (!row.trim()) return; 
+                    
+                    // Tách các cột bằng dấu phẩy
+                    const cols = row.split(','); 
+                    const tr = document.createElement('tr');
+                    
+                    cols.forEach(col => {
+                        // Dòng đầu tiên làm tiêu đề (th), các dòng sau làm dữ liệu (td)
+                        const cell = index === 0 ? document.createElement('th') : document.createElement('td');
+                        // Loại bỏ dấu ngoặc kép thừa trong file CSV nếu có
+                        cell.textContent = col.replace(/(^"|"$)/g, '').trim(); 
+                        tr.appendChild(cell);
+                    });
+                    
+                    table.appendChild(tr);
+                });
+            })
+            .catch(error => console.error('Lỗi khi tải file CSV:', error));
+    </script>
+
+</body>
+</html>
